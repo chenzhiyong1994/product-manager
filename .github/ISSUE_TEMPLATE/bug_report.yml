@@ -1,0 +1,46 @@
+name: Bug / 行为问题
+description: 报告可复现的 Skill 路由、生成或审查问题
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请移除真实客户名称、业务数据、账号、内部链接和凭据。
+  - type: dropdown
+    id: skill
+    attributes:
+      label: 涉及的 Skill
+      options:
+        - create-prd
+        - check-prd
+        - AGENTS / 路由
+        - README / 示例
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: 最小复现输入
+      description: 使用虚构或已脱敏的内容，保留触发问题所需的最少上下文。
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充信息
+      description: 可填写 Codex 版本、相关文件和已尝试的排查；不要粘贴凭据或私有日志。

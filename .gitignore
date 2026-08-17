@@ -1,0 +1,21 @@
+# Runtime and generated working files
+runs/*
+!runs/.gitkeep
+workspace/*
+!workspace/.gitkeep
+
+# Local credentials and machine-specific configuration
+.env
+.env.*
+!.env.example
+*.local
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+.cache/

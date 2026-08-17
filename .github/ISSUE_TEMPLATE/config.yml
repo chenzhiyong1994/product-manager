@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全或隐私问题
+    url: https://github.com/chenzhiyong1994/product-manager/security/advisories/new
+    about: 请通过私密安全报告提交凭据、个人信息或未修复漏洞。
