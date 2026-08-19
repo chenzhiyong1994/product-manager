@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="以考生画像为核心的升学咨询工作台高保真原型">
+  <title>考生画像工作台 · 高保真原型</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <!--
+    原型假设：
+    1. 当前页面用于咨询师服务单个考生，桌面端 1440px 以上为主要场景。
+    2. “个人资料 / 成绩分析 / 用户关注 / 填报统计”作为画像的数据源，不再作为平级菜单。
+    3. 文档与音频导入在本原型中演示处理链路，不执行真实上传和 AI 解析。
+    4. 示例画像内容为演示数据；敏感信息维持脱敏展示。
+  -->
+
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4.1 2.8-6 6.5-6s5.8 1.9 6.5 6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5M10 16h5"/></symbol>
+    <symbol id="i-report" viewBox="0 0 24 24"><path d="M5 20V9M11 20V4M17 20v-7M3 20h18"/></symbol>
+    <symbol id="i-headset" viewBox="0 0 24 24"><path d="M5 13v-2a7 7 0 0 1 14 0v2M5 13H3v6h4v-6zm14 0h2v6h-4v-6zM17 20c-1 1-2.7 1-4 1"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 14.5l2 1.2-2 3.4-2.1-1a8 8 0 0 1-2.9 1.7L13.8 22h-4l-.3-2.2a8 8 0 0 1-2.8-1.7l-2 1-2-3.4 2-1.2a8 8 0 0 1 0-3l-2-1.2 2-3.4 2 1a8 8 0 0 1 2.8-1.7L9.8 4h4l.2 2.2A8 8 0 0 1 17 8l2.1-1 2 3.4-2 1.2a8 8 0 0 1 0 3z"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7.5 8.5L12 4l4.5 4.5M5 15v5h14v-5"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M9.5 14.5l5-5M7.8 17.8l-1.6 1.6a3.7 3.7 0 0 1-5.2-5.2l3.2-3.2a3.7 3.7 0 0 1 5.2 0M16.2 6.2l1.6-1.6A3.7 3.7 0 0 1 23 9.8L19.8 13a3.7 3.7 0 0 1-5.2 0"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <strong>优志愿</strong>
+        <span class="brand-product">专家工作台</span>
+      </div>
+      <nav class="top-links" aria-label="全局导航">
+        <button type="button">工具箱</button>
+        <button type="button">指数大屏</button>
+        <button type="button" class="top-link-primary">下载客户端</button>
+        <span class="breadcrumb">专家填报 <b>/</b> 客单详情</span>
+      </nav>
+      <div class="system-status">
+        <span class="status-live"><i></i>网络正常</span>
+        <span>用时 102ms</span>
+        <button class="ai-orb" type="button" aria-label="AI 助手"><svg><use href="#i-spark"/></svg></button>
+        <button class="avatar" type="button" aria-label="账户：陈老师">陈</button>
+      </div>
+    </header>
+
+    <aside class="global-rail" aria-label="全局模块">
+      <button type="button"><svg><use href="#i-grid"/></svg><span>总览</span></button>
+      <button type="button" class="active"><svg><use href="#i-user"/></svg><span>考生</span></button>
+      <button type="button"><svg><use href="#i-file"/></svg><span>服务</span></button>
+      <button type="button"><svg><use href="#i-report"/></svg><span>运营</span></button>
+      <span class="rail-spacer"></span>
+      <button type="button"><svg><use href="#i-headset"/></svg><span>帮助</span></button>
+      <button type="button"><svg><use href="#i-settings"/></svg><span>设置</span></button>
+    </aside>
+
+    <aside class="context-nav">
+      <div class="student-mini">
+        <div class="student-avatar">张</div>
+        <div>
+          <strong>张同学</strong>
+          <span>2026届 · 广东 · 物化生</span>
+        </div>
+        <button type="button" aria-label="切换考生">⌄</button>
+      </div>
+
+      <div class="score-mini">
+        <div><b>570</b><span>分</span></div>
+        <p>省排 55,692</p>
+        <span class="score-context">本科主体区间</span>
+      </div>
+
+      <nav class="context-menu" aria-label="客单模块">
+        <p>核心工作</p>
+        <button type="button" class="active"><span class="menu-index">01</span><b>考生画像</b><em>68%</em></button>
+        <button type="button"><span class="menu-index">02</span><b>沟通记录</b><em>4</em></button>
+        <button type="button"><span class="menu-index">03</span><b>阶段规划</b><em>草案</em></button>
+
+        <p>关联功能 <small>不进入画像</small></p>
+        <button type="button"><span class="menu-bullet"></span><b>志愿表</b><em>6</em></button>
+        <button type="button"><span class="menu-bullet"></span><b>综合报告</b></button>
+        <button type="button"><span class="menu-bullet"></span><b>测评报告</b></button>
+        <button type="button"><span class="menu-bullet"></span><b>提交工单</b></button>
+
+        <p>档案管理</p>
+        <button type="button"><span class="menu-bullet"></span><b>档案下载</b></button>
+        <button type="button" class="muted"><span class="menu-bullet"></span><b>回收站</b></button>
+      </nav>
+
+      <div class="service-note">
+        <span>客单进度</span>
+        <strong>画像补齐中</strong>
+        <div class="mini-progress"><i style="width:68%"></i></div>
+        <small>最近更新：今天 10:42</small>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="page-heading">
+        <div>
+          <div class="eyebrow"><span>客单 / 张同学</span><i></i><b>画像版本 V6</b></div>
+          <h1>考生画像</h1>
+          <p>汇集系统资料与外部证据，形成可追溯、可更新、可用于填报决策的特征档案。</p>
+        </div>
+        <div class="heading-actions">
+          <button type="button" class="button-secondary" data-open-import><svg><use href="#i-upload"/></svg>导入资料</button>
+          <button type="button" class="button-primary" data-open-plan>查看方案就绪度 <svg><use href="#i-chevron"/></svg></button>
+        </div>
+      </header>
+
+      <section class="readiness-hero" aria-labelledby="readiness-title">
+        <div class="readiness-overview">
+          <div class="readiness-ring" style="--progress:68" aria-label="画像完整度 68%">
+            <div><b>68</b><span>%</span><small>画像完整度</small></div>
+          </div>
+          <div class="readiness-copy">
+            <span class="section-kicker">PROFILE READINESS</span>
+            <h2 id="readiness-title">距离生成可靠方案，还差 <em>3 项必填信息</em></h2>
+            <p>当前可生成“探索版”方案；补齐专业底线、调剂意愿和近三次位次后，可进入正式冲稳保计算。</p>
+            <div class="source-chips" aria-label="当前画像数据来源">
+              <span>个人资料</span><span>成绩分析</span><span>用户关注</span><span>填报统计</span><span class="external">+ 2 份外部资料</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="readiness-stats">
+          <article>
+            <div class="stat-head"><span>必填信息</span><b>6 / 9</b></div>
+            <div class="stat-bar required"><i style="width:67%"></i></div>
+            <p><strong>影响能否生成方案</strong><span>还差 3 项</span></p>
+          </article>
+          <article>
+            <div class="stat-head"><span>补充信息</span><b>18 / 27</b></div>
+            <div class="stat-bar extra"><i style="width:67%"></i></div>
+            <p><strong>影响方案精细度</strong><span>建议补 5 项</span></p>
+          </article>
+          <article>
+            <div class="stat-head"><span>证据确认度</span><b>74%</b></div>
+            <div class="stat-bar trust"><i style="width:74%"></i></div>
+            <p><strong>32 个标签可用于决策</strong><span class="warn">2 项冲突</span></p>
+          </article>
+        </div>
+
+        <div class="priority-strip">
+          <div class="priority-label"><span>优先补齐</span><small>按对方案的影响排序</small></div>
+          <button class="gap-item" type="button" data-gap="rank">
+            <span class="gap-order">01</span><span><b>近三次位次</b><small>决定冲稳保区间</small></span><svg><use href="#i-chevron"/></svg>
+          </button>
+          <button class="gap-item" type="button" data-gap="major">
+            <span class="gap-order">02</span><span><b>不可接受专业</b><small>决定专业过滤边界</small></span><svg><use href="#i-chevron"/></svg>
+          </button>
+          <button class="gap-item" type="button" data-gap="adjust">
+            <span class="gap-order">03</span><span><b>是否接受调剂</b><small>决定滑档风险</small></span><svg><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <section class="profile-section">
+        <div class="profile-toolbar">
+          <div class="segmented" role="tablist" aria-label="画像视图">
+            <button type="button" class="active" data-view="overview" role="tab">画像总览</button>
+            <button type="button" data-view="gaps" role="tab">待补齐 <span>9</span></button>
+            <button type="button" data-view="evidence" role="tab">证据视图</button>
+          </div>
+          <label class="tag-search">
+            <svg><use href="#i-search"/></svg>
+            <input id="tagSearch" type="search" placeholder="搜索维度或标签" aria-label="搜索维度或标签">
+          </label>
+          <div class="legend" aria-label="标签状态说明">
+            <span><i class="confirmed"></i>已确认</span>
+            <span><i class="supported"></i>有证据</span>
+            <span><i class="candidate"></i>AI 推断</span>
+            <span><i class="conflicted"></i>待核验</span>
+          </div>
+        </div>
+
+        <div class="profile-layout">
+          <aside class="dimension-index">
+            <div class="dimension-index-head">
+              <span>12 个画像维度</span>
+              <small>32 / 44 标签可用</small>
+            </div>
+            <nav aria-label="画像维度索引">
+              <button type="button" class="active" data-target="academic"><span>01</span><b>学业与分数</b><em>82%</em></button>
+              <button type="button" data-target="ability"><span>02</span><b>能力与兴趣</b><em>71%</em></button>
+              <button type="button" data-target="major"><span>03</span><b>专业与职业</b><em>54%</em></button>
+              <button type="button" data-target="preference"><span>04</span><b>院校与地域</b><em>75%</em></button>
+              <button type="button" data-target="family"><span>05</span><b>家庭与风险</b><em>61%</em></button>
+              <button type="button" data-target="action"><span>06</span><b>行动与路径</b><em>48%</em></button>
+            </nav>
+            <div class="dimension-summary">
+              <span>本次建议</span>
+              <p>先确认 3 项硬约束，再补充职业价值与专业认知。</p>
+              <button type="button" data-open-plan>查看补齐顺序</button>
+            </div>
+          </aside>
+
+          <div class="dimension-canvas" id="dimensionCanvas">
+            <section class="dimension-group" id="academic" data-group>
+              <header><div><span>01</span><h3>学业与分数</h3></div><p>决定可达区间、补弱优先级与方案颗粒度</p><b>82%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card" data-search="学业基线 广东 2026届 物理 化学 生物 570分 55692位">
+                  <div class="card-title"><span>学业基线</span><small>7 / 8</small></div>
+                  <div class="tags">
+                    <button class="tag confirmed" data-evidence="province">广东 · 2026届</button>
+                    <button class="tag confirmed" data-evidence="subjects">物理 / 化学 / 生物</button>
+                    <button class="tag supported external-source" data-evidence="score">570分 · 55,692位 <i>成绩单</i></button>
+                    <button class="tag gap" data-gap="rank">近三次位次待补</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="分数情境 本科主体区间 批次线 波动">
+                  <div class="card-title"><span>分数情境</span><small>3 / 4</small></div>
+                  <div class="tags">
+                    <button class="tag supported" data-evidence="score-band">本科主体区间</button>
+                    <button class="tag candidate" data-evidence="fluctuation">成绩存在波动</button>
+                    <button class="tag gap" data-gap="batch">批次边界距离待计算</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="dimension-group" id="ability" data-group>
+              <header><div><span>02</span><h3>能力与兴趣</h3></div><p>识别学习方式、投入证据与真实动机</p><b>71%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card" data-search="学科能力 物理优势 动手实践 应用倾向">
+                  <div class="card-title"><span>学科能力</span><small>4 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag confirmed" data-evidence="physics">物理相对优势</button>
+                    <button class="tag supported external-source" data-evidence="hands-on">偏好动手实践 <i>咨询录音</i></button>
+                    <button class="tag candidate" data-evidence="application">应用型学习倾向</button>
+                    <button class="tag gap" data-gap="learning">学习速度待补</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="兴趣与动机 计算机应用 项目经历 纯理论">
+                  <div class="card-title"><span>兴趣与动机</span><small>5 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag supported external-source" data-evidence="computer-interest">计算机应用兴趣 <i>咨询录音</i></button>
+                    <button class="tag confirmed" data-evidence="theory">不偏好纯理论</button>
+                    <button class="tag supported" data-evidence="project">有简单项目经历</button>
+                    <button class="tag gap" data-gap="long-interest">长期投入证据不足</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="dimension-group" id="major" data-group>
+              <header><div><span>03</span><h3>专业与职业</h3></div><p>决定方向排序、科普重点与相邻备选</p><b>54%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card" data-search="职业价值 收入 稳定 成长 城市 自主性">
+                  <div class="card-title"><span>职业价值</span><small>2 / 5</small></div>
+                  <div class="tags">
+                    <button class="tag supported" data-evidence="growth">成长空间优先</button>
+                    <button class="tag candidate" data-evidence="stability">兼顾稳定</button>
+                    <button class="tag gap" data-gap="career-value">收入 / 城市取舍待确认</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="专业认知 计算机 电子信息 自动化 排除专业">
+                  <div class="card-title"><span>专业认知</span><small>3 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag supported" data-evidence="major-range">关注计算机 / 电子信息</button>
+                    <button class="tag candidate" data-evidence="automation">可探索自动化</button>
+                    <button class="tag conflicted" data-evidence="major-conflict">专业理解偏名称化</button>
+                    <button class="tag gap required-gap" data-gap="major">不可接受专业待补</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="dimension-group" id="preference" data-group>
+              <header><div><span>04</span><h3>院校与地域</h3></div><p>形成院校过滤器与可交换条件</p><b>75%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card" data-search="院校偏好 公办 行业特色 转专业 保研">
+                  <div class="card-title"><span>院校偏好</span><small>4 / 5</small></div>
+                  <div class="tags">
+                    <button class="tag confirmed" data-evidence="public-school">公办优先</button>
+                    <button class="tag supported" data-evidence="industry-school">接受行业特色院校</button>
+                    <button class="tag candidate" data-evidence="transfer-major">关注转专业机会</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="地域与生活 省内优先 高铁三小时 广东 城市">
+                  <div class="card-title"><span>地域与生活</span><small>5 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag conflicted external-source" data-evidence="province-first">省内优先 <i>咨询录音</i></button>
+                    <button class="tag supported" data-evidence="travel-radius">省外限高铁 3 小时</button>
+                    <button class="tag confirmed" data-evidence="city">城市可为专业让步</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="dimension-group" id="family" data-group>
+              <header><div><span>05</span><h3>家庭与风险</h3></div><p>识别硬约束、决策权结构与兜底边界</p><b>61%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card sensitive-card" data-search="家庭条件 预算 公办 民办 家长期望">
+                  <div class="card-title"><span>家庭条件 <i>敏感</i></span><small>3 / 5</small></div>
+                  <div class="tags">
+                    <button class="tag supported external-source" data-evidence="budget">公办预算可控 <i>家长陈述</i></button>
+                    <button class="tag conflicted" data-evidence="private-school">民办需家庭讨论</button>
+                    <button class="tag gap" data-gap="decision-role">家庭决策权待确认</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="风险偏好 冲稳保 专业调剂 复读 中外合作">
+                  <div class="card-title"><span>风险偏好</span><small>3 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag confirmed" data-evidence="protect-major">保专业优先</button>
+                    <button class="tag candidate" data-evidence="risk-level">风险偏好中低</button>
+                    <button class="tag gap required-gap" data-gap="adjust">调剂意愿待补</button>
+                    <button class="tag gap" data-gap="repeat">复读接受度待补</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="dimension-group" id="action" data-group>
+              <header><div><span>06</span><h3>行动与路径</h3></div><p>决定任务难度、提醒方式与资格节点</p><b>48%</b></header>
+              <div class="dimension-cards">
+                <article class="dimension-card" data-search="行动能力 自驱 信息搜集 项目 复盘 时间管理">
+                  <div class="card-title"><span>行动能力</span><small>3 / 6</small></div>
+                  <div class="tags">
+                    <button class="tag supported external-source" data-evidence="execution">可完成短期项目 <i>咨询纪要</i></button>
+                    <button class="tag candidate" data-evidence="research-ability">信息搜集一般</button>
+                    <button class="tag gap" data-gap="review">复盘习惯待补</button>
+                  </div>
+                </article>
+                <article class="dimension-card" data-search="特殊路径 强基 综评 专项 艺体 军警 港澳 海外">
+                  <div class="card-title"><span>特殊路径</span><small>2 / 4</small></div>
+                  <div class="tags">
+                    <button class="tag confirmed" data-evidence="special-none">暂不考虑艺体</button>
+                    <button class="tag supported" data-evidence="evaluation">综评资格待评估</button>
+                    <button class="tag gap" data-gap="materials">材料准备度待补</button>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <div class="empty-search" id="emptySearch" hidden>
+              <span>未找到匹配的画像标签</span>
+              <button type="button" data-clear-search>清空搜索</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <aside class="evidence-drawer" id="evidenceDrawer" aria-hidden="true" aria-labelledby="evidenceTitle">
+    <div class="drawer-head">
+      <div><span id="evidenceDimension">画像证据</span><h2 id="evidenceTitle">标签详情</h2></div>
+      <button type="button" class="icon-button" data-close-drawer aria-label="关闭证据详情"><svg><use href="#i-close"/></svg></button>
+    </div>
+    <div class="drawer-content">
+      <div class="evidence-status" id="evidenceStatus"><i></i><span>有证据支持</span><b>置信度 86%</b></div>
+      <section class="decision-impact">
+        <span>对方案的作用</span>
+        <p id="evidenceImpact">用于院校地域过滤与候选排序。</p>
+      </section>
+      <div class="trace-title"><span>证据链</span><small>点击标签可反向追溯</small></div>
+      <ol class="trace-chain">
+        <li class="trace-tag"><span>03</span><div><small>特征标签</small><strong id="traceTag">省内优先</strong></div></li>
+        <li class="trace-structure"><span>02</span><div><small>结构化处理</small><strong id="traceStructure">地域偏好 = 省内优先；主体 = 家长</strong><p id="traceType">信息类型：他人观点 · 待学生确认</p></div></li>
+        <li class="trace-source"><span>01</span><div><small>原始资料</small><strong id="traceSourceName">首次咨询录音_0818.mp3</strong><blockquote id="traceQuote">“我们还是希望孩子在省内发展，城市不要太远，但也要有发展机会。”</blockquote><div class="source-meta"><span id="traceTime">18:24–18:31 · 家长</span><b id="traceOperator">2026-08-20 陈老师导入</b></div></div></li>
+      </ol>
+      <section class="verification-box">
+        <div><span>确认状态</span><strong id="verificationLabel">待学生确认</strong></div>
+        <p id="verificationHint">当前标签仅用于生成追问，不直接参与志愿排序。</p>
+        <button type="button" class="button-secondary full" id="confirmEvidence">标记为咨询师已核验</button>
+      </section>
+      <div class="version-row"><span>画像版本 V6</span><span>最近更新 2026-08-20 10:42</span></div>
+    </div>
+  </aside>
+  <div class="drawer-scrim" data-close-drawer></div>
+
+  <div class="modal" id="importModal" aria-hidden="true">
+    <div class="modal-card import-card" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+      <header class="modal-head">
+        <div><span>外部资料导入</span><h2 id="importTitle">把原始资料转化为画像标签</h2></div>
+        <button type="button" class="icon-button" data-close-modal aria-label="关闭导入弹窗"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="import-stepper" aria-label="资料处理流程">
+        <div class="active" data-step-indicator="1"><b>01</b><span>原文提取</span></div><i></i>
+        <div data-step-indicator="2"><b>02</b><span>结构化处理</span></div><i></i>
+        <div data-step-indicator="3"><b>03</b><span>特征标签</span></div><i></i>
+        <div data-step-indicator="4"><b>04</b><span>融合画像</span></div>
+      </div>
+      <div class="import-body">
+        <section class="import-panel active" data-import-panel="1">
+          <div class="dropzone">
+            <svg><use href="#i-upload"/></svg>
+            <h3>拖入文档或音频</h3>
+            <p>支持 DOCX、PDF、TXT、MP3、M4A、WAV；单份不超过 500MB</p>
+            <button type="button" class="button-secondary" id="chooseDemoFile">选择演示文件</button>
+          </div>
+          <div class="demo-file" id="demoFile" hidden>
+            <div class="file-type">MP3</div><div><strong>首次咨询录音_0818.mp3</strong><span>36:24 · 42.8MB · 学生 / 家长 / 陈老师</span></div><b>已就绪</b>
+          </div>
+          <div class="privacy-note"><span>隐私提示</span><p>请确认所有参与者已知情并同意录音与 AI 分析；敏感字段仅在影响当前升学决策时提取。</p></div>
+        </section>
+
+        <section class="import-panel" data-import-panel="2">
+          <div class="source-preview">
+            <div class="source-preview-head"><div><span class="recording-dot"></span><strong>原文提取完成</strong></div><small>已区分 3 位发言人 · 98% 音文对齐</small></div>
+            <div class="transcript-line"><span class="speaker parent">家长</span><time>18:24</time><p>我们还是希望孩子在省内发展，城市不要太远，但也要有发展机会。</p></div>
+            <div class="transcript-line selected"><span class="speaker student">学生</span><time>18:25</time><p>我比较喜欢计算机相关的专业，动手实践多一点的，不太喜欢纯理论研究。</p></div>
+            <div class="transcript-line"><span class="speaker teacher">陈老师</span><time>18:26</time><p>如果省外学校的专业实践机会更好，高铁三小时以内可以接受吗？</p></div>
+            <div class="transcript-line"><span class="speaker student">学生</span><time>18:27</time><p>可以考虑，专业合适的话城市可以让一步。</p></div>
+          </div>
+        </section>
+
+        <section class="import-panel" data-import-panel="3">
+          <div class="structure-grid">
+            <div class="structure-source"><span>选中的原始片段</span><blockquote>“我比较喜欢计算机相关的专业，动手实践多一点的，不太喜欢纯理论研究。”</blockquote><small>学生 · 18:25 · ASR 置信度 96%</small></div>
+            <div class="structure-arrow"><svg><use href="#i-chevron"/></svg></div>
+            <div class="structure-fields">
+              <span>结构化结果</span>
+              <dl><div><dt>兴趣方向</dt><dd>计算机相关</dd></div><div><dt>学习偏好</dt><dd>动手实践</dd></div><div><dt>回避项</dt><dd>纯理论研究</dd></div><div><dt>信息类型</dt><dd>学生自述偏好</dd></div></dl>
+            </div>
+          </div>
+          <div class="structure-rules"><span>处理规则</span><p>保留原话，不将“喜欢计算机”直接扩写为“适合计算机专业”；先作为有证据标签，后续通过投入经历与能力证据继续核验。</p></div>
+        </section>
+
+        <section class="import-panel" data-import-panel="4">
+          <div class="tag-result-head"><div><span>建议融合的标签</span><h3>本次识别 6 个标签，其中 2 个需要核验</h3></div><b>6</b></div>
+          <div class="result-tags">
+            <label><input type="checkbox" checked><span class="tag supported">计算机应用兴趣</span><small>兴趣与动机</small></label>
+            <label><input type="checkbox" checked><span class="tag supported">偏好动手实践</span><small>学科能力</small></label>
+            <label><input type="checkbox" checked><span class="tag confirmed">不偏好纯理论</span><small>兴趣与动机</small></label>
+            <label><input type="checkbox" checked><span class="tag supported">省外限高铁 3 小时</span><small>地域与生活</small></label>
+            <label><input type="checkbox" checked><span class="tag conflicted">省内优先</span><small>待学生确认</small></label>
+            <label><input type="checkbox" checked><span class="tag candidate">城市可为专业让步</span><small>AI 推断</small></label>
+          </div>
+          <div class="fusion-summary"><div><span>融合后画像完整度</span><strong>68% <i>→</i> 74%</strong></div><p>不会覆盖现有已确认标签；冲突项进入待核验队列。</p></div>
+        </section>
+      </div>
+      <footer class="modal-actions">
+        <button type="button" class="button-ghost" id="importPrev" hidden>上一步</button>
+        <span></span>
+        <button type="button" class="button-primary" id="importNext" disabled>开始提取原文 <svg><use href="#i-chevron"/></svg></button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="modal" id="planModal" aria-hidden="true">
+    <div class="modal-card plan-card" role="dialog" aria-modal="true" aria-labelledby="planTitle">
+      <header class="modal-head">
+        <div><span>方案就绪度</span><h2 id="planTitle">先补齐会改变方案的关键信息</h2></div>
+        <button type="button" class="icon-button" data-close-modal aria-label="关闭方案就绪度"><svg><use href="#i-close"/></svg></button>
+      </header>
+      <div class="plan-readiness">
+        <div class="plan-score"><b>6</b><span>/ 9</span><small>必填已完成</small></div>
+        <div><h3>当前可生成“探索版方案”</h3><p>正式冲稳保方案需要 3 项必填信息；补充信息不会阻断生成，但会影响排序解释与备选颗粒度。</p></div>
+      </div>
+      <div class="requirement-columns">
+        <section><header><span>必填信息</span><b>还差 3 项</b></header>
+          <button type="button" data-gap="rank"><i>01</i><span><strong>近三次位次</strong><small>确定上下浮动区间</small></span><em>去补充</em></button>
+          <button type="button" data-gap="major"><i>02</i><span><strong>不可接受专业</strong><small>建立专业硬过滤器</small></span><em>去补充</em></button>
+          <button type="button" data-gap="adjust"><i>03</i><span><strong>是否接受专业调剂</strong><small>评估滑档与专业风险</small></span><em>去补充</em></button>
+        </section>
+        <section><header><span>建议补充</span><b>影响精准度</b></header>
+          <button type="button" data-gap="career-value"><i>01</i><span><strong>职业价值排序</strong><small>收入 / 稳定 / 成长取舍</small></span><em>建议</em></button>
+          <button type="button" data-gap="long-interest"><i>02</i><span><strong>长期兴趣证据</strong><small>区分“喜欢听说”与真实投入</small></span><em>建议</em></button>
+          <button type="button" data-gap="repeat"><i>03</i><span><strong>复读接受度</strong><small>完善低位次风险预案</small></span><em>建议</em></button>
+        </section>
+      </div>
+      <div class="plan-bottom"><p><strong>2 项证据冲突</strong>不会进入自动排序；系统会优先生成核验问题。</p><button type="button" class="button-primary" id="generateExplore">生成探索版方案</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"><svg><use href="#i-check"/></svg><span>已更新</span></div>
+  <script src="./app.js"></script>
+</body>
+</html>
