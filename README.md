@@ -42,7 +42,9 @@ ProductManager addresses both failure modes:
 | Skill | Use it for | Output |
 | --- | --- | --- |
 | [`create-prd`](skills/create-prd/SKILL.md) | Writing a PRD or product specification from business context, notes, or a rough idea | Product classification, a scope-aware structure, Mermaid diagrams, state/permission/exception rules, and explicit `[TODO]` gaps |
-| [`check-prd`](skills/check-prd/SKILL.md) | Reviewing a PRD, requirements document, SaaS spec, or enterprise system design | Applicability-aware 14-dimension review, P0–P3 findings, source locations, veto risks, and a prioritized Top 10 |
+| [`check-prd`](skills/check-prd/SKILL.md) | Reviewing or improving a PRD, requirements document, SaaS spec, or enterprise system design | Applicable review dimensions, P0–P3 findings, source locations, and prioritized fixes; requested revisions are applied |
+
+Clear requests proceed through the requested scope without classification approval or chapter-by-chapter confirmation. Reviews report evidence-backed findings without a fixed quota; requests to revise also deliver the updated document. Missing business facts remain explicit gaps.
 
 ## Workflow
 
