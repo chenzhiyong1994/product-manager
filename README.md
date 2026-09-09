@@ -19,9 +19,16 @@
   English ｜ <a href="README_zh-CN.md">简体中文</a>
 </p>
 
+<p align="center">
+  <a href="https://chenzhiyong1994.github.io/product-manager/"><strong>Project homepage</strong></a> ·
+  <a href="https://github.com/chenzhiyong1994/product-manager">GitHub repository</a>
+</p>
+
 ---
 
 ProductManager is not a universal prompt or an automatic decision maker. It is a maintainable set of project-level Codex Skills that classifies the product and document scope first, loads only the relevant rules, and checks whether a spec can actually support design, engineering, QA, and rollout.
+
+The [GitHub Pages project homepage](https://chenzhiyong1994.github.io/product-manager/) offers a visual overview of both workflows, supported document scopes, review blind spots, and copy-ready quick-start commands.
 
 > The workflows and output templates are Chinese-first. This English README is an overview for international contributors.
 

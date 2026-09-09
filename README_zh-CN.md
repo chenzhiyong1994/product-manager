@@ -19,9 +19,16 @@
   <a href="README.md">English</a> ｜ 简体中文
 </p>
 
+<p align="center">
+  <a href="https://chenzhiyong1994.github.io/product-manager/"><strong>项目主页</strong></a> ·
+  <a href="https://github.com/chenzhiyong1994/product-manager">GitHub 仓库</a>
+</p>
+
 ---
 
 ProductManager 不是一份万能 Prompt，也不是替产品经理做决定的“自动写文档器”。它是一组可审查、可扩展的项目级 Skill：先识别产品类型与文档范围，再按需加载章节规则，最后用证据化标准检查方案是否足以支撑设计、研发、测试与上线。
+
+[GitHub Pages 项目主页](https://chenzhiyong1994.github.io/product-manager/)以可视化方式介绍双工作流、适用的文档范围、重点审查盲区和可直接复制的快速开始命令。
 
 ## 为什么做这个项目
 
@@ -100,6 +107,7 @@ Skill 会先完成产品定型或适用性判断。遇到关键信息不足时�
 ```text
 product-manager/
 ├── AGENTS.md                 # 项目边界与任务路由
+├── .github/workflows/pages.yml # GitHub Pages 自动发布
 ├── skills/
 │   ├── create-prd/           # PRD 创建工作流
 │   │   ├── SKILL.md
@@ -109,6 +117,7 @@ product-manager/
 │       ├── references/       # 14 个审查维度与重大风险规则
 │       └── evals/            # 行为与触发评估用例
 ├── examples/                 # 已脱敏的使用示例
+├── site/                     # GitHub Pages 项目主页
 └── assets/readme/            # 项目介绍视觉资产
 ```
 
